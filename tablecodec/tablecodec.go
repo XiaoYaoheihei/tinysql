@@ -71,33 +71,25 @@ func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key {
 
 // DecodeRecordKey decodes the key and gets the tableID, handle.
 func DecodeRecordKey(key kv.Key) (tableID int64, handle int64, err error) {
-	/* Project 1-2: your code here
-	 * DecodeRecordKey decodes the key and gets the tableID, handle.
-	 * Decode is actually the reverse of encoding, so you can refer to EncodeRowKeyWithHandle.
-	 *
-	 * Parameters
-	 *   key: the key needs to be decoded. It may be invalid.
-	 *
-	 * Return value
-	 *   tableID: decoded value.
-	 *   handle:  decoded value.
-	 *   err:     error during decoding, otherwise nil.
-	 *
-	 * DecodeRecordKey may need to follow the steps:
-	 *   1. check if the key is valid.
-	 *   2. get the table prefix and decode.
-	 *   3. get the record prefix and decode.
-	 *   4. create handle.
-	 *   5. return decoded value.
-	 *
-	 * Some hints:
-	 *   1. you may need codec.DecodeInt to decode string to int
-	 *   2. const `prefixLen`, `tablePrefixLength` and `recordPrefixSepLength` are useful.
-	 *   3. errInvalidRecordKey.GenWithStack is a useful function to generate invalid record key errors.
-	 *   4. if an error occurs, return 0 as tableID, nil as handle and the error.
-	 *   5. understanding the coding rules is a prerequisite for implementing this function,
-	 *      you can learn it in the projection 1-2 course documentation.
-	 */
+	//first check the length of the key
+	if len(key) != RecordRowKeyLen {
+
+	}
+	//check whether have the prefix
+	//only return bool
+	if !key.HasPrefix(tablePrefix) {
+
+	}
+	key, tableID, err = codec.DecodeInt(key[1:])
+	if err != nil {
+
+	}
+	//check whether have the recordPrefixsep
+	//then return bool
+	if !key.HasPrefix(recordPrefixSep) {
+
+	}
+	key, handle, err = codec.DecodeInt(key[2:])
 	return
 }
 
@@ -120,34 +112,27 @@ func EncodeIndexSeekKey(tableID int64, idxID int64, encodedValue []byte) kv.Key 
 
 // DecodeIndexKeyPrefix decodes the key and gets the tableID, indexID, indexValues.
 func DecodeIndexKeyPrefix(key kv.Key) (tableID int64, indexID int64, indexValues []byte, err error) {
-	/* Project 1-2: your code here
-	 * DecodeIndexKeyPrefix decodes the key and gets the tableID, indexID, indexValues.
-	 * Decode is actually the reverse of encoding, so you can refer to EncodeIndexSeekKey.
-	 *
-	 * Parameters
-	 *   key: the key needs to be decoded. It may be invalid.
-	 *
-	 * Return value
-	 *   tableID:     decoded value.
-	 *   indexID:     decoded value.
-	 *   indexValues: decoded value.
-	 *   err:         error during decoding, otherwise nil.
-	 *
-	 * DecodeRecordKey may need to follow the steps:
-	 *   1. check if the key is valid.
-	 *   2. decode tableID.
-	 *   3. decode indexID.
-	 *   4. decode indexValues.
-	 *   5. return decoded value.
-	 *
-	 * Some hints:
-	 *   1. you may need codec.DecodeInt to decode string to int
-	 *   2. const `prefixLen`, `idLen` and others are useful.
-	 *   3. errInvalidRecordKey.GenWithStack is a useful function to generate invalid record key errors.
-	 *   4. if an error occurs, return 0 as tableID, 0 as indexID, nil as indexValues and the error.
-	 *   5. understanding the coding rules is a prerequisite for implementing this function,
-	 *      you can learn it in the projection 1-2 course documentation.
-	 */
+	//check the length of the key
+	if len(key)!= {
+
+	}
+	if !key.HasPrefix(tablePrefix) {
+
+	}
+	key, tableID, err = codec.DecodeInt(key[1:])
+	if err!= nil {
+
+	}
+	if !key.HasPrefix(indexPrefixSep) {
+
+	}
+	//check the number in the []
+	key, indexID, err = codec.DecodeInt(key[2: ])
+	if err!=nil {
+
+	}
+
+	indexValues = key
 	return tableID, indexID, indexValues, nil
 }
 
