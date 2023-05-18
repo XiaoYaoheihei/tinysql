@@ -3809,6 +3809,41 @@ JoinTable:
 	{
 		$$ = &ast.Join{Left: $1.(ast.ResultSetNode), Right: $3.(ast.ResultSetNode), Tp: ast.CrossJoin}
 	}
+|
+	TableRef JoinType "JOIN" TableRef "ON" Expression %prec tableRefPriority
+	{
+	/*这里的规则纯纯没有看明白，不明白树是怎么构建的*/
+		$$ = &ast.Join {
+                		Left: $1.(ast.ResultSetNode),
+                		Right: $4.(ast.ResultSetNode),
+                		Tp: $2.(ast.JoinType),
+               			On: &ast.OnCondition {
+               					Expr: $6.(ast.ExprNode),
+                				},
+                		}
+	}
+/*后面的产生式不知道可不可以存在
+|
+	TableRef OuterOpt "JOIN" TableRef "ON" Expression %prec tableRefPriority
+        {
+
+       	}
+|
+	TableRef "NATUAL" CrossOpt TableFactor %prec tableRefPriority
+	{
+
+	}
+|
+	TableRef "NATUAL" JoinType "JOIN" TableFactor %prec tableRefPriority
+	{
+
+	}
+|
+	TableRef "NATUAL" OuterOpt "JOIN" TableFactor %prec tableRefPriority
+        {
+
+       	}
+*/
 	/* Project 2: your code here.
 	 * You can see details about JoinTable in https://dev.mysql.com/doc/refman/8.0/en/join.html
 	 *

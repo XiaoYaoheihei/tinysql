@@ -73,23 +73,31 @@ func EncodeRowKeyWithHandle(tableID int64, handle int64) kv.Key {
 func DecodeRecordKey(key kv.Key) (tableID int64, handle int64, err error) {
 	//first check the length of the key
 	if len(key) != RecordRowKeyLen {
-
+		return 0, 0, nil
+		//errors.New("len(key) != RecordRowKeyLen")
 	}
-	//check whether have the prefix
+	//check the prefix "t"
 	//only return bool
 	if !key.HasPrefix(tablePrefix) {
-
+		return 0, 0, nil
+		//errors.New("key don't have the tablePrefix")
 	}
 	key, tableID, err = codec.DecodeInt(key[1:])
 	if err != nil {
-
+		return 0, 0, nil
+		//errors.New("key have the trouble in tableID")
 	}
-	//check whether have the recordPrefixsep
+	//check the recordPrefixsep"_r"
 	//then return bool
 	if !key.HasPrefix(recordPrefixSep) {
-
+		return 0, 0, nil
+		//errors.New("key don't have the recordPrefixSep")
 	}
 	key, handle, err = codec.DecodeInt(key[2:])
+	if err != nil {
+		return 0, 0, nil
+		//errors.New("key have the trouble in handle")
+	}
 	return
 }
 
@@ -113,23 +121,28 @@ func EncodeIndexSeekKey(tableID int64, idxID int64, encodedValue []byte) kv.Key 
 // DecodeIndexKeyPrefix decodes the key and gets the tableID, indexID, indexValues.
 func DecodeIndexKeyPrefix(key kv.Key) (tableID int64, indexID int64, indexValues []byte, err error) {
 	//check the length of the key
-	if len(key)!= {
-
+	if len(key) <= prefixLen+idLen {
+		return 0, 0, nil, nil
 	}
+	//this func return bool
+	//"t"
 	if !key.HasPrefix(tablePrefix) {
-
+		return 0, 0, nil, nil
+		//errors.New("key don't have the tablePrefix")
 	}
 	key, tableID, err = codec.DecodeInt(key[1:])
-	if err!= nil {
-
+	if err != nil {
+		return 0, 0, nil, nil
 	}
+	//"_i"
 	if !key.HasPrefix(indexPrefixSep) {
-
+		return 0, 0, nil, nil
+		//errors.New("key don't have the indexPrefixSep")
 	}
 	//check the number in the []
-	key, indexID, err = codec.DecodeInt(key[2: ])
-	if err!=nil {
-
+	key, indexID, err = codec.DecodeInt(key[2:])
+	if err != nil {
+		return 0, 0, nil, nil
 	}
 
 	indexValues = key
